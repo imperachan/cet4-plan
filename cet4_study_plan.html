@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四級計劃表 · 如月春乃</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="四級計劃">
+<meta name="theme-color" content="#1a2640">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Noto+Serif+TC:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6f0;
+    --paper: #f4ede1;
+    --navy: #1a2640;
+    --navy-soft: #2d3f5c;
+    --terracotta: #c0624a;
+    --amber: #d4933a;
+    --sage: #5e7c6a;
+    --sage-light: #e8f0eb;
+    --blush: #e8c4b0;
+    --rule: rgba(26,38,64,0.12);
+    --shadow: 0 4px 20px rgba(26,38,64,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--navy);
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 300;
+    line-height: 1.8;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── 封面 ── */
+  .cover {
+    max-width: 760px;
+    margin: 0 auto 60px;
+    text-align: center;
+    padding: 60px 40px 50px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-top: 4px solid var(--terracotta);
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--rule);
+    pointer-events: none;
+  }
+  .cover-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .cover h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .cover-sub {
+    font-size: 0.95rem;
+    color: var(--navy-soft);
+    opacity: 0.75;
+    margin-bottom: 32px;
+  }
+  .cover-dates {
+    display: inline-flex;
+    gap: 32px;
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    padding: 16px 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--navy-soft);
+  }
+  .cover-dates span { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .cover-dates strong { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); }
+
+  /* ── 段落標題 ── */
+  .section {
+    max-width: 760px;
+    margin: 0 auto 48px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--rule);
+  }
+  .phase-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    padding: 5px 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ph1 { background: var(--terracotta); color: #fff; }
+  .ph2 { background: var(--amber); color: #fff; }
+  .ph3 { background: var(--sage); color: #fff; }
+  .ph4 { background: var(--navy); color: #fff; }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .section-header .date-range {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--navy-soft);
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  /* ── 卡片 ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 12px;
+  }
+  .card p { font-size: 0.92rem; color: var(--navy-soft); margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* ── 技能格 ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 540px) { .skills-grid { grid-template-columns: 1fr; } }
+
+  .skill-item {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    position: relative;
+  }
+  .skill-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .skill-item.vocab::before { background: var(--terracotta); }
+  .skill-item.listen::before { background: var(--amber); }
+  .skill-item.read::before { background: var(--sage); }
+  .skill-item.write::before { background: var(--navy-soft); }
+  .skill-item.trans::before { background: #8b6e9e; }
+
+  .skill-label {
+    font-size: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--navy);
+  }
+  .skill-item.vocab .skill-label { color: var(--terracotta); }
+  .skill-item.listen .skill-label { color: var(--amber); }
+  .skill-item.read .skill-label { color: var(--sage); }
+  .skill-item.write .skill-label { color: var(--navy-soft); }
+  .skill-item.trans .skill-label { color: #8b6e9e; }
+
+  .skill-item p { font-size: 0.88rem; color: var(--navy-soft); line-height: 1.7; }
+
+  /* ── 週計劃表格 ── */
+  .week-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .week-table th {
+    background: var(--navy);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 400;
+  }
+  .week-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--navy-soft);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .week-table tr:last-child td { border-bottom: none; }
+  .week-table tr:nth-child(even) td { background: var(--paper); }
+  .week-table .day-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--navy);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 8px;
+    margin: 2px 2px 2px 0;
+    letter-spacing: 0.05em;
+  }
+  .tag-v { background: #f8e8e4; color: var(--terracotta); }
+  .tag-l { background: #fdf3e3; color: var(--amber); }
+  .tag-r { background: var(--sage-light); color: var(--sage); }
+  .tag-w { background: #e8edf4; color: var(--navy-soft); }
+  .tag-t { background: #f0ebf5; color: #8b6e9e; }
+  .tag-rest { background: #f5f5f5; color: #888; }
+
+  /* ── 資源清單 ── */
+  .resources {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 28px 32px;
+    box-shadow: var(--shadow);
+  }
+  .resources h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: var(--navy);
+  }
+  .res-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+    font-size: 0.88rem;
+  }
+  .res-cat {
+    flex-shrink: 0;
+    width: 80px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  .res-content { color: var(--navy-soft); line-height: 1.7; }
+
+  /* ── 警示框 ── */
+  .alert {
+    border-left: 3px solid var(--terracotta);
+    background: #fdf5f3;
+    padding: 16px 20px;
+    font-size: 0.88rem;
+    color: var(--navy-soft);
+    margin-top: 16px;
+    line-height: 1.75;
+  }
+  .alert strong { color: var(--terracotta); font-weight: 500; }
+
+  /* ── 時間條 ── */
+  .time-bar {
+    display: flex;
+    height: 28px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    margin: 24px 0 8px;
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .tb-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 6px;
+  }
+  .tb-p1 { background: var(--terracotta); flex: 22; }
+  .tb-p2 { background: var(--amber); flex: 28; }
+  .tb-p3 { background: var(--sage); flex: 21; }
+  .tb-p4 { background: var(--navy); flex: 11; }
+  .time-bar-labels {
+    display: flex;
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--navy-soft);
+    opacity: 0.6;
+    margin-bottom: 28px;
+    justify-content: space-between;
+  }
+
+  /* ── 頁腳 ── */
+  footer {
+    max-width: 760px;
+    margin: 60px auto 0;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--navy);
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── 分隔線 ── */
+  .divider {
+    max-width: 760px;
+    margin: 0 auto 48px;
+    border: none;
+    border-top: 1px solid var(--rule);
+  }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="cover">
+  <div class="cover-label">如月春乃の英語備考計劃</div>
+  <h1>全國英語四級考試<br>學習計劃表</h1>
+  <div class="cover-sub">從初二詞彙量出發 · 82天衝刺 CET-4</div>
+  <div class="cover-dates">
+    <span><strong>3月23日</strong>開始日</span>
+    <span><strong>82天</strong>備考時長</span>
+    <span><strong>6月13日</strong>考試日</span>
+  </div>
+</div>
+
+<!-- 時間軸 -->
+<div class="section">
+  <div class="time-bar">
+    <div class="tb-seg tb-p1">Phase 1 · 22天</div>
+    <div class="tb-seg tb-p2">Phase 2 · 28天</div>
+    <div class="tb-seg tb-p3">Phase 3 · 21天</div>
+    <div class="tb-seg tb-p4">Phase 4 · 11天</div>
+  </div>
+  <div class="time-bar-labels">
+    <span>3/23</span>
+    <span>4/14</span>
+    <span>5/12</span>
+    <span>6/2</span>
+    <span>6/13</span>
+  </div>
+</div>
+
+<!-- Phase 1 -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge ph1">Phase 1</div>
+    <h2>打牢地基</h2>
+    <span class="date-range">3/23 — 4/13 · 22天</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">目標</div>
+    <p>從初二詞彙（約1500詞）起步，補全初中核心語法，詞彙量推進至2500詞。培養每日學習習慣，建立英語語感。每日投入 <strong>1.5～2小時</strong>。</p>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item vocab">
+      <div class="skill-label">📘 詞彙</div>
+      <p>每天記憶 <strong>20～25個</strong>高頻詞（初中升四級銜接詞）。推薦：墨墨背單詞 App，選「四級基礎詞包」，每日打卡。</p>
+    </div>
+    <div class="skill-item listen">
+      <div class="skill-label">🎧 聽力</div>
+      <p>從 <strong>VOA Special English</strong>（慢速）開始，每天聽1段（3～5分鐘），不要求全聽懂，主要感受語調節奏。</p>
+    </div>
+    <div class="skill-item read">
+      <div class="skill-label">📖 閱讀</div>
+      <p>練習初中水平短文閱讀（100～200字），每天1篇。重點：遇到生詞先猜，再查。不要每個詞都翻譯。</p>
+    </div>
+    <div class="skill-item write">
+      <div class="skill-label">✏️ 語法</div>
+      <p>系統復習：時態（8種核心）、被動語態、從句基礎。每天15分鐘語法練習，推薦《語法俱樂部》或B站語法課。</p>
+    </div>
+  </div>
+
+  <div class="alert">
+    <strong>本階段重點提示：</strong>這個階段不要碰四級真題——你會被打擊到崩潰的。先把基礎砌實，比什麼都重要。詞彙量是一切的根本。
+  </div>
+</div>
+
+<!-- Phase 2 -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge ph2">Phase 2</div>
+    <h2>能力建設</h2>
+    <span class="date-range">4/14 — 5/11 · 28天</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">目標</div>
+    <p>詞彙量推進至 <strong>3800～4000詞</strong>，開始接觸四級各題型，初步掌握聽力、閱讀、寫作技巧框架。每日投入 <strong>2～2.5小時</strong>。</p>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item vocab">
+      <div class="skill-label">📘 詞彙</div>
+      <p>加速至每天 <strong>30～35個</strong>，開始用《四級核心詞彙亂序版》或同等詞彙書，配合 App 複習鞏固舊詞。</p>
+    </div>
+    <div class="skill-item listen">
+      <div class="skill-label">🎧 聽力</div>
+      <p>過渡到 <strong>四級歷年真題聽力</strong>（2018年起）。每天1套聽力選擇題（短對話+短文），對答案後精聽原文。</p>
+    </div>
+    <div class="skill-item read">
+      <div class="skill-label">📖 閱讀</div>
+      <p>練習<strong>略讀（skimming）</strong>和<strong>掃讀（scanning）</strong>技巧。每天1篇四級難度選詞填空或長篇閱讀。先做題再查生詞。</p>
+    </div>
+    <div class="skill-item write">
+      <div class="skill-label">✏️ 寫作</div>
+      <p>背熟 <strong>3套議論文萬能模板</strong>（開頭/主體/結尾各一套句型）。每週練習1篇作文（約120字），自批自改。</p>
+    </div>
+    <div class="skill-item trans">
+      <div class="skill-label">🔤 翻譯</div>
+      <p>從本階段後半開始（5月初）接觸翻譯題。先了解題型格式，練習漢譯英的句子組合，不追求完美。</p>
+    </div>
+  </div>
+
+  <div class="alert">
+    <strong>建議：</strong>4月底開始做第一套完整四級真題（計時），不要怕分數低——這是摸底，不是考試。記錄弱項，後續針對性加強。
+  </div>
+</div>
+
+<!-- Phase 3 -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge ph3">Phase 3</div>
+    <h2>強化衝刺</h2>
+    <span class="date-range">5/12 — 6/1 · 21天</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">目標</div>
+    <p>詞彙量鞏固在 <strong>4200～4500詞</strong>，每週完成 <strong>2套完整真題模擬</strong>，針對薄弱環節集中突破。每日投入 <strong>2.5～3小時</strong>。</p>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item vocab">
+      <div class="skill-label">📘 詞彙</div>
+      <p>改為每天複習為主（20詞新+30詞舊），特別注意高頻詞的搭配用法，不只是記中文意思。</p>
+    </div>
+    <div class="skill-item listen">
+      <div class="skill-label">🎧 聽力</div>
+      <p>真題精聽：每篇聽3遍（盲聽→對答案→精聽跟讀），重點攻克長對話和短文聽力。</p>
+    </div>
+    <div class="skill-item read">
+      <div class="skill-label">📖 閱讀</div>
+      <p>重點練習<strong>長篇閱讀（匹配題）</strong>和<strong>仔細閱讀</strong>。學習定位技巧，控制做題時間在25分鐘內。</p>
+    </div>
+    <div class="skill-item write">
+      <div class="skill-label">✏️ 寫作</div>
+      <p>每週2篇作文，練完後對比高分範文，找差距。重點：開頭段＋結尾段要寫得漂亮，中間段用好過渡詞。</p>
+    </div>
+    <div class="skill-item trans">
+      <div class="skill-label">🔤 翻譯</div>
+      <p>每天1段漢譯英練習（中國文化類，如四季、節日、建築），積累固定搭配和表達句式。</p>
+    </div>
+  </div>
+
+  <div class="alert">
+    <strong>模擬考試安排：</strong>每週六做一套完整真題（嚴格計時130分鐘），週日對答案、分析錯誤。每次模擬後記錄分數，觀察進步曲線。
+  </div>
+</div>
+
+<!-- Phase 4 -->
+<div class="section">
+  <div class="section-header">
+    <div class="phase-badge ph4">Phase 4</div>
+    <h2>最後衝刺</h2>
+    <span class="date-range">6/2 — 6/13 · 11天</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">目標</div>
+    <p>鞏固已掌握的知識，<strong>不接觸任何新內容</strong>。調整作息，保持狀態穩定，以最佳狀態進考場。每日投入 <strong>1.5～2小時</strong>，寧少勿濫。</p>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item vocab">
+      <div class="skill-label">📘 詞彙</div>
+      <p>只複習熟悉的詞，不背新詞。特別過一遍翻譯和寫作中的高頻詞彙與搭配。</p>
+    </div>
+    <div class="skill-item listen">
+      <div class="skill-label">🎧 聽力</div>
+      <p>每天保持語感：聽1段真題音頻（不做題，純聽）。維持耳朵的靈敏度。</p>
+    </div>
+    <div class="skill-item read">
+      <div class="skill-label">📖 閱讀</div>
+      <p>回顧做錯過的閱讀題，重看解析。不做新題，避免新的挫折感影響信心。</p>
+    </div>
+    <div class="skill-item write">
+      <div class="skill-label">✏️ 寫作</div>
+      <p>把背熟的作文模板默寫一遍，確保考場上能流暢輸出。準備3個萬能開頭句備用。</p>
+    </div>
+  </div>
+
+  <div class="alert">
+    <strong>6月12日（考前一天）：</strong>不做任何練習。整理准考證、文具。早睡。吃好早飯。你已經準備好了。
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 每週作息 -->
+<div class="section">
+  <div class="section-header">
+    <h2 style="font-size:1.2rem;">每週時間安排（Phase 2-3 參考）</h2>
+  </div>
+
+  <table class="week-table">
+    <thead>
+      <tr>
+        <th>星期</th>
+        <th>主要任務</th>
+        <th>時長</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="day-label">週一</td>
+        <td>
+          <span class="tag tag-v">詞彙</span> 新詞記憶30個<br>
+          <span class="tag tag-l">聽力</span> 短對話真題精聽
+        </td>
+        <td>2h</td>
+      </tr>
+      <tr>
+        <td class="day-label">週二</td>
+        <td>
+          <span class="tag tag-v">詞彙</span> 複習舊詞+新詞25個<br>
+          <span class="tag tag-r">閱讀</span> 選詞填空1套
+        </td>
+        <td>2h</td>
+      </tr>
+      <tr>
+        <td class="day-label">週三</td>
+        <td>
+          <span class="tag tag-v">詞彙</span> 新詞30個<br>
+          <span class="tag tag-w">寫作</span> 練習作文1篇
+        </td>
+        <td>2.5h</td>
+      </tr>
+      <tr>
+        <td class="day-label">週四</td>
+        <td>
+          <span class="tag tag-v">詞彙</span> 複習<br>
+          <span class="tag tag-r">閱讀</span> 仔細閱讀2篇<br>
+          <span class="tag tag-l">聽力</span> 長對話1組
+        </td>
+        <td>2h</td>
+      </tr>
+      <tr>
+        <td class="day-label">週五</td>
+        <td>
+          <span class="tag tag-t">翻譯</span> 漢譯英練習1段<br>
+          <span class="tag tag-l">聽力</span> 短文聽力1套<br>
+          <span class="tag tag-v">詞彙</span> 本週詞彙總複習
+        </td>
+        <td>2.5h</td>
+      </tr>
+      <tr>
+        <td class="day-label">週六</td>
+        <td>
+          完整真題模擬（嚴格計時130分鐘）→ 對答案 → 錯題分析
+        </td>
+        <td>3h</td>
+      </tr>
+      <tr>
+        <td class="day-label">週日</td>
+        <td>
+          <span class="tag tag-rest">輕鬆複習</span> 整理本週筆記、背單詞、聽音頻<br>
+          <em style="font-size:0.82rem;color:#888;">留出休息時間，不要燃燒殆盡</em>
+        </td>
+        <td>1h</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="divider">
+
+<!-- 推薦資源 -->
+<div class="section">
+  <div class="section-header">
+    <h2 style="font-size:1.2rem;">推薦備考資源</h2>
+  </div>
+  <div class="resources">
+    <div class="res-row">
+      <div class="res-cat">詞彙 App</div>
+      <div class="res-content">墨墨背單詞（選四級詞包）、不背單詞——間隔重複算法，比死記硬背有效得多</div>
+    </div>
+    <div class="res-row">
+      <div class="res-cat">詞彙書</div>
+      <div class="res-content">《大學英語四級核心詞彙亂序版》（亂序版比正序版更不容易只記頭幾頁）</div>
+    </div>
+    <div class="res-row">
+      <div class="res-cat">真題</div>
+      <div class="res-content">2018—2024年六套真題（重點用2020年後），B站有免費講解視頻</div>
+    </div>
+    <div class="res-row">
+      <div class="res-cat">聽力</div>
+      <div class="res-content">四六級真題App（官方音頻）、VOA Learning English（初期過渡）</div>
+    </div>
+    <div class="res-row">
+      <div class="res-cat">語法</div>
+      <div class="res-content">《語法俱樂部》（旋元佑，繁中版也行）/ B站「英語兔」語法系列——免費且通俗</div>
+    </div>
+    <div class="res-row">
+      <div class="res-cat">寫作</div>
+      <div class="res-content">《四級作文高分模板》或同類書，重點看議論文模板，背熟 10 個萬能句型</div>
+    </div>
+  </div>
+</div>
+
+<footer>CET-4 STUDY PLAN · 如月春乃 · 2026.03.23 — 2026.06.13</footer>
+
+</body>
+</html>
