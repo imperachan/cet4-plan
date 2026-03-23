@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>四級計劃 · 春乃</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="四級計劃">
+<meta name="theme-color" content="#EAE8F0">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#EAE8F0;--surface:#F2F0F7;--card:#FAFAFE;
+  --ink:#3A3650;--ink-soft:#6B6680;--muted:#A8A4B8;
+  --border:#D5D0E4;--border-soft:#E4E0F0;
+  --m-mauve:#B7AAC6;--m-purple:#A09CC1;--m-teal:#9DBEC3;
+  --m-mist:#D8E6E7;--m-blue:#A7BEE0;--m-skyblue:#C6D5EA;
+  --m-cream:#EFE3D3;--m-sand:#D9C9BA;
+  --r:10px;--sh:0 2px 16px rgba(58,54,80,.08);--nh:64px
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);font-family:'Noto Sans TC',sans-serif;color:var(--ink);display:flex;flex-direction:column}
+.pages{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding:0 0 calc(var(--nh) + 16px);
+  opacity:0;pointer-events:none;transform:translateY(6px);
+  transition:opacity .22s ease,transform .22s ease;-webkit-overflow-scrolling:touch}
+.page.active{opacity:1;pointer-events:all;transform:translateY(0)}
+.pi{max-width:480px;margin:0 auto;padding:20px 14px 0}
+.nav{height:var(--nh);background:var(--card);border-top:1px solid var(--border-soft);
+  display:flex;align-items:center;flex-shrink:0;
+  padding-bottom:env(safe-area-inset-bottom,0);position:relative;z-index:50}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;padding:8px 0;-webkit-tap-highlight-color:transparent}
+.ni-ic{font-size:20px;line-height:1;transition:transform .2s}
+.ni-lb{font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.06em;color:var(--muted);transition:color .15s}
+.ni.active .ni-lb{color:var(--m-purple)}
+.ni.active .ni-ic{transform:translateY(-2px)}
+.ni-dt{width:4px;height:4px;border-radius:50%;background:var(--m-purple);margin-top:-1px;opacity:0;transition:opacity .15s}
+.ni.active .ni-dt{opacity:1}
+/* Common */
+.stit{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.ssub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--r);box-shadow:var(--sh);padding:18px;margin-bottom:12px}
+.cl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+/* Home header */
+.hdr{background:linear-gradient(135deg,var(--m-purple),var(--m-teal));
+  border-radius:var(--r);padding:22px 20px;margin-bottom:12px;color:#fff;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-30px;right:-20px;width:120px;height:120px;background:rgba(255,255,255,.08);border-radius:50%}
+.hg{font-size:12px;opacity:.85;font-family:'DM Mono',monospace;letter-spacing:.1em;margin-bottom:6px}
+.hd{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600;margin-bottom:16px}
+.hr2{display:flex;gap:16px;align-items:flex-end}
+.ci{text-align:center}
+.cn{font-family:'DM Mono',monospace;font-size:26px;font-weight:400;line-height:1;display:block}
+.cl2{font-size:10px;opacity:.75;margin-top:2px;display:block}
+.cd{opacity:.4;font-size:20px;padding-bottom:4px}
+/* Phase now */
+.pnw{border-radius:var(--r);padding:18px 20px;margin-bottom:12px;color:#fff;position:relative;overflow:hidden}
+.pnw::after{content:'';position:absolute;bottom:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,.1);border-radius:50%}
+.pb{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  background:rgba(255,255,255,.2);display:inline-block;padding:3px 10px;border-radius:10px;margin-bottom:8px}
+.pn{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600;margin-bottom:4px}
+.pd{font-size:11px;opacity:.8;margin-bottom:10px;font-family:'DM Mono',monospace}
+.py{font-size:12px;opacity:.9}
+/* Tasks */
+.tr{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--border-soft)}
+.tr:last-child{border-bottom:none}
+.te{font-size:15px;flex-shrink:0;padding-top:1px}
+.tt{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+.tt strong{color:var(--ink);font-weight:500}
+/* Prog */
+.prb{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:8px 0 4px}
+.prf{height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.prl{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+/* Alert */
+.ab{border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.7;border-left:3px solid;margin-top:4px}
+/* Plan grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.phc{border-radius:var(--r);padding:16px 14px;color:#fff;position:relative;overflow:hidden;
+  min-height:128px;display:flex;flex-direction:column;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.phc:active{transform:scale(.97)}
+.phc::before{content:'';position:absolute;bottom:-16px;right:-16px;width:64px;height:64px;background:rgba(255,255,255,.12);border-radius:50%}
+.phnu{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;opacity:.8;margin-bottom:5px}
+.phna{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:600;margin-bottom:3px}
+.phda{font-size:10px;opacity:.75;font-family:'DM Mono',monospace;margin-bottom:auto}
+.phdy{font-family:'DM Mono',monospace;font-size:10px;margin-top:10px;opacity:.85}
+.cbdg{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.25);
+  font-size:9px;font-family:'DM Mono',monospace;padding:2px 6px;border-radius:8px}
+/* Detail */
+.pdt{display:none;animation:fu .2s ease}
+.pdt.show{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.skl{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.ski{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;
+  background:var(--surface);border-radius:7px;border-left:3px solid;
+  font-size:12px;line-height:1.65;color:var(--ink-soft)}
+.ski strong{color:var(--ink)}
+/* Week table */
+.wkt{width:100%;border-collapse:collapse;font-size:12px}
+.wkt th{background:var(--ink);color:var(--card);font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.1em;padding:8px 10px;text-align:left;font-weight:400}
+.wkt td{padding:10px;border-bottom:1px solid var(--border-soft);color:var(--ink-soft);vertical-align:top;line-height:1.6}
+.wkt tr:last-child td{border-bottom:none}
+.wkt tr:nth-child(even) td{background:var(--surface)}
+.dl{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink);white-space:nowrap}
+.mt{display:inline-block;font-size:9px;font-family:'DM Mono',monospace;padding:1px 6px;border-radius:8px;margin:1px 2px 1px 0}
+/* Resources */
+.rg{margin-bottom:14px}
+.rgt{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ri{display:flex;align-items:center;gap:12px;padding:14px 16px;
+  background:var(--card);border:1px solid var(--border-soft);border-radius:8px;
+  margin-bottom:7px;text-decoration:none;color:var(--ink);
+  transition:background .15s,transform .1s;-webkit-tap-highlight-color:transparent}
+.ri:active{background:var(--surface);transform:scale(.98)}
+.ric{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rib{flex:1;min-width:0}
+.rin{font-size:13px;font-weight:500;margin-bottom:2px}
+.rid{font-size:11px;color:var(--muted);line-height:1.5}
+.ria{color:var(--muted);font-size:14px;flex-shrink:0}
+/* My */
+.myh{background:linear-gradient(135deg,var(--m-mauve),var(--m-skyblue));
+  border-radius:var(--r);padding:24px 20px;color:#fff;text-align:center;margin-bottom:12px;position:relative;overflow:hidden}
+.myh::before{content:'';position:absolute;top:-40px;left:-40px;width:150px;height:150px;background:rgba(255,255,255,.06);border-radius:50%}
+.myn{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:600;margin-bottom:4px}
+.myt{font-size:12px;opacity:.8;margin-bottom:16px}
+.myr{display:inline-flex;flex-direction:column;align-items:center;
+  background:rgba(255,255,255,.15);border-radius:50%;width:80px;height:80px;justify-content:center;margin-bottom:12px}
+.myv{font-family:'DM Mono',monospace;font-size:26px;font-weight:400;line-height:1}
+.myl{font-size:10px;opacity:.8;margin-top:2px}
+.mye{font-size:11px;opacity:.75;font-family:'DM Mono',monospace}
+/* Stats grid */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.sc{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh)}
+.sv{font-family:'DM Mono',monospace;font-size:24px;font-weight:400;line-height:1;margin-bottom:4px}
+.sl{font-size:11px;color:var(--muted)}
+/* WOD */
+.wod{background:linear-gradient(135deg,var(--m-teal),var(--m-blue));border-radius:var(--r);padding:18px 20px;color:#fff;margin-bottom:12px}
+.wl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;opacity:.8;margin-bottom:8px}
+.ww{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:600;margin-bottom:4px}
+.wp{font-family:'DM Mono',monospace;font-size:11px;opacity:.75;margin-bottom:6px}
+.wm{font-size:13px;opacity:.9;line-height:1.6}
+.we{font-size:11px;opacity:.75;margin-top:6px;font-style:italic;line-height:1.5}
+/* Fortune */
+.fc{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--sh);margin-bottom:12px;text-align:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.fc:active{transform:scale(.98)}
+.fq{font-family:'Noto Serif TC',serif;font-size:15px;line-height:1.8;color:var(--ink);margin-bottom:8px;white-space:pre-line}
+.ft{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em}
+/* Streak */
+.sr{display:flex;gap:5px;flex-wrap:wrap}
+.sd{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-family:'DM Mono',monospace;background:var(--surface);color:var(--muted);border:1px solid var(--border-soft)}
+.sd.done{background:var(--m-teal);color:#fff;border-color:var(--m-teal)}
+.sd.today{background:var(--m-purple);color:#fff;border-color:var(--m-purple)}
+/* Ach */
+.ag{display:flex;flex-wrap:wrap;gap:8px}
+.ai{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 12px;
+  background:var(--surface);border-radius:8px;border:1px solid var(--border-soft);
+  font-size:10px;color:var(--muted);min-width:60px;transition:all .2s}
+.ai.ok{background:var(--card);color:var(--ink);border-color:var(--m-mauve);box-shadow:0 2px 8px rgba(160,156,193,.2)}
+.aico{font-size:22px}
+.ain{font-family:'DM Mono',monospace;font-size:9px;text-align:center}
+</style></head>
+<body>
+<div class="pages">
+<!-- HOME -->
+<div class="page active" id="page-home"><div class="pi">
+  <div class="hdr">
+    <div class="hg" id="greet"></div><div class="hd" id="hdate"></div>
+    <div class="hr2">
+      <div class="ci"><span class="cn" id="cdL">—</span><span class="cl2">距考試</span></div>
+      <div class="cd">·</div>
+      <div class="ci"><span class="cn" id="cdN">—</span><span class="cl2">第幾天</span></div>
+      <div class="cd">·</div>
+      <div class="ci"><span class="cn" id="cdP">—</span><span class="cl2">階段第</span></div>
+    </div>
+  </div>
+  <div class="pnw" id="pnw">
+    <div class="pb" id="pbdg">Phase —</div>
+    <div class="pn" id="pnm">—</div>
+    <div class="pd" id="pdt2"></div>
+    <div class="py" id="pdly"></div>
+  </div>
+  <div class="card">
+    <div class="cl">今日任務</div>
+    <div id="ttsk"></div>
+    <div class="ab" id="palt"></div>
+  </div>
+  <div class="card">
+    <div class="cl">整體進度</div>
+    <div class="prb"><div class="prf" id="op" style="background:linear-gradient(90deg,var(--m-purple),var(--m-teal))"></div></div>
+    <div class="prl"><span id="opL"></span><span id="opR"></span></div>
+    <div style="margin-top:12px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:2px">當前階段</div>
+      <div class="prb"><div class="prf" id="pp" style="background:var(--m-mauve)"></div></div>
+      <div class="prl"><span id="ppL"></span><span id="ppR"></span></div>
+    </div>
+  </div>
+</div></div>
+<!-- PLAN -->
+<div class="page" id="page-plan"><div class="pi">
+  <div class="stit">計劃總覽</div><div class="ssub">CET-4 · 2026.03.23 — 2026.06.13</div>
+  <div class="g2">
+    <div class="phc" style="background:linear-gradient(135deg,#B7AAC6,#A09CC1)" onclick="tgD('d1')">
+      <div class="phnu">Phase 1</div><div class="phna">打牢地基</div>
+      <div class="phda">3/23 — 4/13</div><div class="phdy">22天 · 1.5-2h/日</div>
+      <span class="cbdg" id="b1" style="display:none">當前</span></div>
+    <div class="phc" style="background:linear-gradient(135deg,#9DBEC3,#7AACAA)" onclick="tgD('d2')">
+      <div class="phnu">Phase 2</div><div class="phna">能力建設</div>
+      <div class="phda">4/14 — 5/11</div><div class="phdy">28天 · 2-2.5h/日</div>
+      <span class="cbdg" id="b2" style="display:none">當前</span></div>
+    <div class="phc" style="background:linear-gradient(135deg,#A7BEE0,#8FAED4)" onclick="tgD('d3')">
+      <div class="phnu">Phase 3</div><div class="phna">強化衝刺</div>
+      <div class="phda">5/12 — 6/1</div><div class="phdy">21天 · 2.5-3h/日</div>
+      <span class="cbdg" id="b3" style="display:none">當前</span></div>
+    <div class="phc" style="background:linear-gradient(135deg,#D9C9BA,#C4B49A)" onclick="tgD('d4')">
+      <div class="phnu">Phase 4</div><div class="phna">最後衝刺</div>
+      <div class="phda">6/2 — 6/13</div><div class="phdy">11天 · 1.5-2h/日</div>
+      <span class="cbdg" id="b4" style="display:none">當前</span></div>
+  </div>
+  <div class="pdt" id="d1"><div class="card"><div class="cl">Phase 1 · 打牢地基</div><div class="skl">
+    <div class="ski" style="border-color:var(--m-purple)">📘 <div><strong>詞彙</strong> 每天20-25個高頻詞，墨墨背單詞打卡。</div></div>
+    <div class="ski" style="border-color:var(--m-teal)">🎧 <div><strong>聽力</strong> VOA慢速英語，每天3-5分鐘，感受語調節奏。</div></div>
+    <div class="ski" style="border-color:var(--m-blue)">📖 <div><strong>閱讀</strong> 短文閱讀每天1篇，生詞先猜後查。</div></div>
+    <div class="ski" style="border-color:var(--m-sand)">✏️ <div><strong>語法</strong> 每天15分鐘，時態、被動語態、從句基礎。</div></div>
+  </div><div class="ab" style="background:#EEEDF7;border-color:var(--m-purple);color:var(--ink-soft);margin-top:12px">⚠️ 這個階段不要碰四級真題，先把基礎砌實。</div></div></div>
+  <div class="pdt" id="d2"><div class="card"><div class="cl">Phase 2 · 能力建設</div><div class="skl">
+    <div class="ski" style="border-color:var(--m-purple)">📘 <div><strong>詞彙</strong> 每天30-35個，《四級核心詞彙亂序版》配合App。</div></div>
+    <div class="ski" style="border-color:var(--m-teal)">🎧 <div><strong>聽力</strong> 四級真題聽力（2018年起），每天1套精聽。</div></div>
+    <div class="ski" style="border-color:var(--m-blue)">📖 <div><strong>閱讀</strong> 略讀與掃讀技巧，每天1篇選詞填空或長篇。</div></div>
+    <div class="ski" style="border-color:var(--m-sand)">✏️ <div><strong>寫作</strong> 背3套議論文模板，每週1篇練習，自批自改。</div></div>
+    <div class="ski" style="border-color:var(--m-mauve)">🔤 <div><strong>翻譯</strong> 5月起接觸翻譯題型，漢譯英練習。</div></div>
+  </div><div class="ab" style="background:#E8F3F4;border-color:var(--m-teal);color:var(--ink-soft);margin-top:12px">💡 4月底做第1套完整真題（計時），摸底用，不怕分數低。</div></div></div>
+  <div class="pdt" id="d3"><div class="card"><div class="cl">Phase 3 · 強化衝刺</div><div class="skl">
+    <div class="ski" style="border-color:var(--m-purple)">📘 <div><strong>詞彙</strong> 複習為主（20新+30舊），注意高頻搭配用法。</div></div>
+    <div class="ski" style="border-color:var(--m-teal)">🎧 <div><strong>聽力</strong> 精聽3遍：盲聽→對答案→跟讀，攻克長對話。</div></div>
+    <div class="ski" style="border-color:var(--m-blue)">📖 <div><strong>閱讀</strong> 長篇匹配題+仔細閱讀，控制25分鐘內完成。</div></div>
+    <div class="ski" style="border-color:var(--m-sand)">✏️ <div><strong>寫作</strong> 每週2篇，對比高分範文，開頭結尾要漂亮。</div></div>
+    <div class="ski" style="border-color:var(--m-mauve)">🔤 <div><strong>翻譯</strong> 每天1段漢譯英（中國文化類），積累搭配。</div></div>
+  </div><div class="ab" style="background:#E8EFF8;border-color:var(--m-blue);color:var(--ink-soft);margin-top:12px">📋 每週六做1套完整真題（嚴格130分鐘），週日分析錯誤。</div></div></div>
+  <div class="pdt" id="d4"><div class="card"><div class="cl">Phase 4 · 最後衝刺</div><div class="skl">
+    <div class="ski" style="border-color:var(--m-sand)">📘 <div><strong>詞彙</strong> 只複習熟悉的詞，不背新詞。</div></div>
+    <div class="ski" style="border-color:var(--m-sand)">🎧 <div><strong>聽力</strong> 每天聽1段維持語感，不做題。</div></div>
+    <div class="ski" style="border-color:var(--m-sand)">📖 <div><strong>閱讀</strong> 回顧錯題解析，不做新題，保持信心。</div></div>
+    <div class="ski" style="border-color:var(--m-sand)">✏️ <div><strong>寫作</strong> 默寫作文模板，準備3個萬能開頭句備用。</div></div>
+  </div><div class="ab" style="background:#F5F2E8;border-color:var(--m-sand);color:var(--ink-soft);margin-top:12px">🌸 6月12日：不做練習，整理准考證，早睡，吃好早飯。</div></div></div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:14px 16px 10px"><div class="cl">每週時間安排（Phase 2-3 參考）</div></div>
+    <table class="wkt"><thead><tr><th>星期</th><th>主要任務</th><th>時長</th></tr></thead><tbody>
+      <tr><td class="dl">週一</td><td><span class="mt" style="background:#EEEDF7;color:var(--m-purple)">詞彙</span><span class="mt" style="background:#E8F3F4;color:#7AACAA">聽力</span><br>新詞30個 · 短對話精聽</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">2h</td></tr>
+      <tr><td class="dl">週二</td><td><span class="mt" style="background:#EEEDF7;color:var(--m-purple)">詞彙</span><span class="mt" style="background:#E8EFF8;color:var(--m-blue)">閱讀</span><br>複習舊詞 · 選詞填空1套</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">2h</td></tr>
+      <tr><td class="dl">週三</td><td><span class="mt" style="background:#EEEDF7;color:var(--m-purple)">詞彙</span><span class="mt" style="background:#F5F2E8;color:#9A8C5A">寫作</span><br>新詞30個 · 練習作文1篇</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">2.5h</td></tr>
+      <tr><td class="dl">週四</td><td><span class="mt" style="background:#E8EFF8;color:var(--m-blue)">閱讀</span><span class="mt" style="background:#E8F3F4;color:#7AACAA">聽力</span><br>仔細閱讀2篇 · 長對話</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">2h</td></tr>
+      <tr><td class="dl">週五</td><td><span class="mt" style="background:#EEF0F5;color:#8A96A8">翻譯</span><span class="mt" style="background:#E8F3F4;color:#7AACAA">聽力</span><br>漢譯英1段 · 本週詞彙總複習</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">2.5h</td></tr>
+      <tr><td class="dl">週六</td><td>完整真題模擬（計時130分鐘）→ 對答案 → 錯題分析</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">3h</td></tr>
+      <tr><td class="dl">週日</td><td style="color:var(--muted)">輕鬆複習 · 整理筆記 · 好好休息</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">1h</td></tr>
+    </tbody></table>
+  </div>
+</div></div>
+<!-- RESOURCES -->
+<div class="page" id="page-res"><div class="pi">
+  <div class="stit">備考資源</div><div class="ssub">精選連結 · 點擊直達</div>
+  <div class="rg"><div class="rgt">詞彙工具</div>
+    <a class="ri" href="https://www.maimemo.com/" target="_blank" rel="noopener"><div class="ric" style="background:#EEEDF7">📘</div><div class="rib"><div class="rin">墨墨背單詞</div><div class="rid">間隔重複算法，選四級詞包，每日打卡</div></div><div class="ria">›</div></a>
+    <a class="ri" href="https://www.merriam-webster.com/" target="_blank" rel="noopener"><div class="ric" style="background:#E8EFF8">📗</div><div class="rib"><div class="rin">Merriam-Webster</div><div class="rid">權威英英詞典，查詞義與例句最準確</div></div><div class="ria">›</div></a>
+  </div>
+  <div class="rg"><div class="rgt">聽力練習</div>
+    <a class="ri" href="https://learningenglish.voanews.com/" target="_blank" rel="noopener"><div class="ric" style="background:#E8F3F4">🎧</div><div class="rib"><div class="rin">VOA Learning English</div><div class="rid">慢速英語，初期過渡，免費無廣告</div></div><div class="ria">›</div></a>
+    <a class="ri" href="https://www.bbc.co.uk/learningenglish" target="_blank" rel="noopener"><div class="ric" style="background:#E8F3F4">📻</div><div class="rib"><div class="rin">BBC Learning English</div><div class="rid">BBC官方，口音標準，內容豐富</div></div><div class="ria">›</div></a>
+  </div>
+  <div class="rg"><div class="rgt">語法與視頻</div>
+    <a class="ri" href="https://space.bilibili.com/483162496" target="_blank" rel="noopener"><div class="ric" style="background:#FEE4E4">🐰</div><div class="rib"><div class="rin">英語兔（B站）</div><div class="rid">系統語法課，免費清晰，強烈推薦</div></div><div class="ria">›</div></a>
+    <a class="ri" href="https://www.bilibili.com/video/BV1JK411i7fK/" target="_blank" rel="noopener"><div class="ric" style="background:#FEE4E4">📺</div><div class="rib"><div class="rin">四六級真題解析（B站）</div><div class="rid">歷年真題逐題分析，查漏補缺用</div></div><div class="ria">›</div></a>
+  </div>
+  <div class="rg"><div class="rgt">官方信息</div>
+    <a class="ri" href="https://cet.neea.edu.cn/" target="_blank" rel="noopener"><div class="ric" style="background:#F5F2E8">🏛️</div><div class="rib"><div class="rin">全國英語等級考試官網</div><div class="rid">查詢成績、准考證、考試時間</div></div><div class="ria">›</div></a>
+  </div>
+  <div class="card" style="text-align:center;padding:14px"><div style="font-size:11px;color:var(--muted);line-height:1.7">所有連結均為官方或知名平台，安全可信。<br>建議在 Wi-Fi 環境下使用。</div></div>
+</div></div>
+<!-- MY -->
+<div class="page" id="page-my"><div class="pi">
+  <div class="myh">
+    <div class="myn">如月春乃</div><div class="myt">CET-4 備考中 ✦</div>
+    <div class="myr"><span class="myv" id="myE">0</span><span class="myl">已備考天</span></div>
+    <div class="mye" id="myES"></div>
+  </div>
+  <div class="sg">
+    <div class="sc"><div class="sv" id="sR" style="color:var(--m-purple)">—</div><div class="sl">距考試天數</div></div>
+    <div class="sc"><div class="sv" id="sP" style="color:var(--m-teal)">—</div><div class="sl">整體進度</div></div>
+    <div class="sc"><div class="sv" id="sPh" style="color:var(--m-blue)">—</div><div class="sl">當前階段</div></div>
+    <div class="sc"><div class="sv" id="sV" style="color:var(--m-sand)">—</div><div class="sl">目標詞彙量</div></div>
+  </div>
+  <div class="wod">
+    <div class="wl">✦ WORD OF THE DAY</div>
+    <div class="ww" id="ww"></div><div class="wp" id="wp2"></div>
+    <div class="wm" id="wm2"></div><div class="we" id="we2"></div>
+  </div>
+  <div class="fc" onclick="nxtF()">
+    <div class="fq" id="fq"></div><div class="ft">輕觸換一句 ✦</div>
+  </div>
+  <div class="card">
+    <div class="cl">備考日曆（本月打卡）</div>
+    <div class="sr" id="srow"></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6">每次打開這個頁面，就算今日學習 ✓</div>
+  </div>
+  <div class="card">
+    <div class="cl">成就解鎖</div>
+    <div class="ag" id="agrid"></div>
+  </div>
+  <div style="height:8px"></div>
+</div></div>
+</div>
+<nav class="nav">
+  <div class="ni active" id="ni-home" onclick="sw('home')"><div class="ni-ic">🏠</div><div class="ni-lb">首頁</div><div class="ni-dt"></div></div>
+  <div class="ni" id="ni-plan" onclick="sw('plan')"><div class="ni-ic">📋</div><div class="ni-lb">計劃</div><div class="ni-dt"></div></div>
+  <div class="ni" id="ni-res" onclick="sw('res')"><div class="ni-ic">📚</div><div class="ni-lb">資源</div><div class="ni-dt"></div></div>
+  <div class="ni" id="ni-my" onclick="sw('my')"><div class="ni-ic">🌸</div><div class="ni-lb">我的</div><div class="ni-dt"></div></div>
+</nav>
+<script>
+function sw(n){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));document.getElementById('page-'+n).classList.add('active');document.getElementById('ni-'+n).classList.add('active')}
+function tgD(id){document.getElementById(id).classList.toggle('show')}
+const ST=new Date('2026-03-23'),EX=new Date('2026-06-13');
+const PH=[
+  {n:1,nm:'打牢地基',s:'2026-03-23',e:'2026-04-13',dy:22,dl:'每日 1.5 — 2 小時',bg:'linear-gradient(135deg,#B7AAC6,#A09CC1)',ab:'#EEEDF7',ac:'var(--m-purple)',
+   tk:[{e:'📘',t:'背單詞 <strong>20-25個</strong>（墨墨背單詞，四級基礎詞包）'},{e:'🎧',t:'VOA 慢速英語 <strong>1段</strong>（3-5分鐘，感受語調）'},{e:'📖',t:'短文閱讀 <strong>1篇</strong>（生詞先猜後查）'},{e:'✏️',t:'語法複習 <strong>15分鐘</strong>（時態 / 被動語態）'}],
+   al:'⚠️ 這個階段不要碰四級真題，先把基礎砌實。',vc:'2,500'},
+  {n:2,nm:'能力建設',s:'2026-04-14',e:'2026-05-11',dy:28,dl:'每日 2 — 2.5 小時',bg:'linear-gradient(135deg,#9DBEC3,#7AACAA)',ab:'#E8F3F4',ac:'var(--m-teal)',
+   tk:[{e:'📘',t:'背單詞 <strong>30-35個</strong>（《四級核心詞彙亂序版》）'},{e:'🎧',t:'真題聽力 <strong>1套</strong>，對答案後精聽原文'},{e:'📖',t:'選詞填空或長篇閱讀 <strong>1篇</strong>'},{e:'✏️',t:'議論文模板背誦 <strong>15分鐘</strong>'},{e:'🔤',t:'（5月起）漢譯英練習，熟悉翻譯題型'}],
+   al:'💡 4月底做第1套完整真題（計時），摸底用，不怕分數低。',vc:'3,800'},
+  {n:3,nm:'強化衝刺',s:'2026-05-12',e:'2026-06-01',dy:21,dl:'每日 2.5 — 3 小時',bg:'linear-gradient(135deg,#A7BEE0,#8FAED4)',ab:'#E8EFF8',ac:'var(--m-blue)',
+   tk:[{e:'📘',t:'詞彙複習為主（<strong>20新+30舊</strong>），注意搭配用法'},{e:'🎧',t:'精聽 <strong>3遍</strong>（盲聽→對答案→跟讀）'},{e:'📖',t:'長篇匹配題+仔細閱讀，控制 <strong>25分鐘</strong>內'},{e:'✏️',t:'作文每週 <strong>2篇</strong>，對比高分範文'},{e:'🔤',t:'漢譯英每天 <strong>1段</strong>（中國文化類）'}],
+   al:'📋 每週六做1套完整真題（嚴格130分鐘），週日分析。',vc:'4,200'},
+  {n:4,nm:'最後衝刺',s:'2026-06-02',e:'2026-06-13',dy:11,dl:'每日 1.5 — 2 小時',bg:'linear-gradient(135deg,#D9C9BA,#C4B49A)',ab:'#F5F2E8',ac:'var(--m-sand)',
+   tk:[{e:'📘',t:'只複習熟悉的詞，<strong>不背新詞</strong>'},{e:'🎧',t:'每天聽1段維持語感，不做題'},{e:'📖',t:'回顧錯題解析，不做新題，保持信心'},{e:'✏️',t:'默寫作文模板，準備3個萬能開頭句'}],
+   al:'🌸 6月12日：不做練習，整理准考證，早睡，吃好早飯。',vc:'4,500'},
+];
+const WD=[
+  {w:'persevere',p:'/ˌpɜːrsɪˈvɪər/',m:'v. 堅持不懈，毅然繼續',e:'"To persevere through difficulty is the mark of a strong learner."'},
+  {w:'accomplish',p:'/əˈkʌmplɪʃ/',m:'v. 完成，實現（目標）',e:'"She accomplished her goal of passing CET-4."'},
+  {w:'diligent',p:'/ˈdɪlɪdʒənt/',m:'adj. 勤奮的，用功的',e:'"Diligent study every day makes a big difference."'},
+  {w:'efficient',p:'/ɪˈfɪʃnt/',m:'adj. 高效的，效率高的',e:'"An efficient study plan saves both time and energy."'},
+  {w:'vocabulary',p:'/vəˈkæbjəleri/',m:'n. 詞彙量；詞彙表',e:'"Building a strong vocabulary is key to CET-4."'},
+  {w:'comprehend',p:'/ˌkɒmprɪˈhend/',m:'v. 理解，領悟',e:'"She could comprehend the passage without a dictionary."'},
+  {w:'consistent',p:'/kənˈsɪstənt/',m:'adj. 持續的；一致的',e:'"Consistent daily practice leads to real improvement."'},
+  {w:'determine',p:'/dɪˈtɜːrmɪn/',m:'v. 決定；下定決心',e:'"She determined to pass the exam no matter what."'},
+  {w:'remarkable',p:'/rɪˈmɑːrkəbl/',m:'adj. 非凡的，值得注意的',e:'"Her progress in 82 days was truly remarkable."'},
+  {w:'motivation',p:'/ˌmoʊtɪˈveɪʃn/',m:'n. 動力，積極性',e:'"Keep your motivation high even on difficult days."'},
+  {w:'strategy',p:'/ˈstrætədʒi/',m:'n. 策略，學習方法',e:'"A good study strategy is worth a hundred cramming nights."'},
+  {w:'fluent',p:'/ˈfluːənt/',m:'adj. 流利的，流暢的',e:'"With practice, she became more fluent in English."'},
+];
+const FT=['千里之行，始於足下。\nEvery long journey begins with a single step.','你今天背的每一個單詞，\n都是未來某一道題的答案。','六月十三日那天，\n你會感謝現在努力的自己。','英語不是天賦，\n是時間的積累。','堅持下去，不是因為你不累，\n而是因為你更想贏。','今天多背一個詞，\n考場上少猜一道題。','進步不是直線的，\n但方向對就夠了。','如月春乃，你比你想象的更有能力。','四級只是一個開始，\n而不是終點。','每天2小時，82天後，\n你會成為不同的人。','困難不是讓你退縮的，\n是讓你變強的。','不積跬步，無以至千里。\nSmall daily progress builds great achievement.'];
+const AC=[{ic:'🌱',n:'出發',u:d=>d>=1},{ic:'📅',n:'一週',u:d=>d>=7},{ic:'🌙',n:'半月',u:d=>d>=14},{ic:'⭐',n:'一個月',u:d=>d>=30},{ic:'🔥',n:'Phase 2',u:d=>d>=22},{ic:'💪',n:'過半程',u:d=>d>=41},{ic:'🚀',n:'Phase 3',u:d=>d>=50},{ic:'🎯',n:'最後關頭',u:d=>d>=71},{ic:'🏆',n:'考試日',u:d=>d>=82}];
+let fi=0;
+function db(a,b){return Math.round((b-a)/86400000)}
+function gt(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function gpi(el){if(el<1)return null;if(el<=22)return 0;if(el<=50)return 1;if(el<=71)return 2;return 3}
+function iH(){
+  const now=gt(),el=db(ST,now)+1,dl=db(now,EX),pi=gpi(el);
+  const h=new Date().getHours();
+  document.getElementById('greet').textContent=h<6?'夜深了，注意休息 ✦':h<12?'早安，春乃 ✦':h<18?'午後，繼續加油 ✦':'晚上好，春乃 ✦';
+  const ms=['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  document.getElementById('hdate').textContent=`${now.getFullYear()} 年 ${ms[now.getMonth()]} 月 ${now.getDate()} 日`;
+  document.getElementById('cdL').textContent=dl>0?dl:'今天！';
+  document.getElementById('cdN').textContent=el>0?el:'—';
+  if(pi!==null){
+    const ph=PH[pi],ps=new Date(ph.s),pe=db(ps,now)+1;
+    document.getElementById('cdP').textContent=pe;
+    const c=document.getElementById('pnw');c.style.background=ph.bg;
+    document.getElementById('pbdg').textContent=`Phase ${ph.n}`;
+    document.getElementById('pnm').textContent=ph.nm;
+    document.getElementById('pdt2').textContent=`${ph.s.slice(5).replace('-','/')} — ${ph.e.slice(5).replace('-','/')}`;
+    document.getElementById('pdly').textContent=ph.dl;
+    document.getElementById('ttsk').innerHTML=ph.tk.map(t=>`<div class="tr"><div class="te">${t.e}</div><div class="tt">${t.t}</div></div>`).join('');
+    const al=document.getElementById('palt');al.textContent=ph.al;al.style.background=ph.ab;al.style.borderColor=ph.ac;al.style.color='var(--ink-soft)';
+    const op=Math.min(100,Math.round(el/82*100));
+    document.getElementById('op').style.width=op+'%';
+    document.getElementById('opL').textContent=`第 ${el} 天`;document.getElementById('opR').textContent=op+'%';
+    const pp2=Math.min(100,Math.round(pe/ph.dy*100));
+    document.getElementById('pp').style.width=pp2+'%';
+    document.getElementById('ppL').textContent=`第 ${pe} 天`;document.getElementById('ppR').textContent=`共 ${ph.dy} 天`;
+    for(let i=1;i<=4;i++)document.getElementById('b'+i).style.display=i===ph.n?'inline-block':'none';
+  }
+}
+function iM(){
+  const now=gt(),el=Math.max(0,db(ST,now)+1),dl=Math.max(0,db(now,EX)),pi=gpi(el),op=Math.min(100,Math.round(el/82*100));
+  document.getElementById('myE').textContent=el>0?el:0;
+  document.getElementById('myES').textContent=dl>0?`距考試還有 ${dl} 天`:'考試日到了，加油！';
+  document.getElementById('sR').textContent=dl;document.getElementById('sP').textContent=op+'%';
+  document.getElementById('sPh').textContent=pi!==null?`P${pi+1}`:'—';document.getElementById('sV').textContent=pi!==null?PH[pi].vc:'—';
+  const wi=(db(ST,now)%WD.length+WD.length)%WD.length,w=WD[wi];
+  document.getElementById('ww').textContent=w.w;document.getElementById('wp2').textContent=w.p;
+  document.getElementById('wm2').textContent=w.m;document.getElementById('we2').textContent=w.e;
+  fi=(db(ST,now)%FT.length+FT.length)%FT.length;
+  document.getElementById('fq').textContent=FT[fi];
+  const yr=now.getFullYear(),mo=now.getMonth(),dim=new Date(yr,mo+1,0).getDate(),td=now.getDate();
+  let sh='';
+  for(let d=1;d<=Math.min(dim,td+4);d++){const dd=new Date(yr,mo,d);sh+=`<div class="sd ${d===td?'today':d<td&&dd>=ST?'done':''}">${d}</div>`;}
+  document.getElementById('srow').innerHTML=sh;
+  document.getElementById('agrid').innerHTML=AC.map(a=>`<div class="ai ${a.u(el)?'ok':''}"><div class="aico">${a.u(el)?a.ic:'🔒'}</div><div class="ain">${a.n}</div></div>`).join('');
+}
+function nxtF(){fi=(fi+1)%FT.length;const el=document.getElementById('fq');el.style.opacity='0';el.style.transform='translateY(4px)';setTimeout(()=>{el.textContent=FT[fi];el.style.transition='opacity .2s,transform .2s';el.style.opacity='1';el.style.transform='translateY(0)'},150)}
+iH();iM();
+</script>
+</body></html>
